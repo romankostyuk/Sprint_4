@@ -6,25 +6,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+
 
 @RunWith(Parameterized.class)
 public class FaqTest {
-    private WebDriver driver;
     private final int numberOfQuestion;
     private final String expectedAnswerText;
+    private WebDriver driver;
+
     public FaqTest(int numberOfQuestion, String expectedAnswerText) {
         this.numberOfQuestion = numberOfQuestion;
         this.expectedAnswerText = expectedAnswerText;
     }
-    @Parameterized.Parameters
+
+    @Parameterized.Parameters(name = "Проверка текста ответа на вопрос номер {0}.")
     public static Object[][] testData() {
-        return new Object[][] {
+        return new Object[][]{
                 {1, "Сутки — 400 рублей. Оплата курьеру — наличными или картой."},
                 {2, "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим."},
                 {3, "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30."},
@@ -35,6 +35,7 @@ public class FaqTest {
                 {8, "Да, обязательно. Всем самокатов! И Москве, и Московской области."}
         };
     }
+
     @Before
     public void setUp() {
         ChromeOptions option = new ChromeOptions();
@@ -47,12 +48,14 @@ public class FaqTest {
         //driver = new FirefoxDriver();
         //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
+
     @Test
     public void faqText_isMatches() {
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
-        assertThat(mainPage.getAnswerText(numberOfQuestion), is(expectedAnswerText));
+        assertEquals(mainPage.getAnswerText(numberOfQuestion), expectedAnswerText);
     }
+
     @After
     public void tearDown() {
         driver.quit();

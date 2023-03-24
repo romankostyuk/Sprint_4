@@ -8,22 +8,19 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 public class OrderPage {
+    private final By lastNameInput = By.cssSelector("div > input[placeholder=\"* Имя\"]");
+    private final By firstNameInput = By.cssSelector("div > input[placeholder=\"* Фамилия\"]");
+    private final By metroStationDropdown = By.cssSelector("div > input[placeholder=\"* Станция метро\"]");
+    private final By addressInput = By.cssSelector("div > input[placeholder=\"* Адрес: куда привезти заказ\"]");
+    private final By phoneInput = By.cssSelector("div > input[placeholder=\"* Телефон: на него позвонит курьер\"]");
+    private final By nextButton = By.xpath("//div/button[@class=\"Button_Button__ra12g Button_Middle__1CSJM\"]");
+    private final By startOfRentInput = By.cssSelector("div > input[placeholder=\"* Когда привезти самокат\"]");
+    private final By rentTermDropdown = By.xpath("//div[starts-with(@class,\"Dropdown-root\")]");
+    private final By commentInput = By.cssSelector("div > input[placeholder=\"Комментарий для курьера\"]");
+    private final By sendOrderButton = By.cssSelector("div > button[class=\"Button_Button__ra12g Button_Middle__1CSJM\"]");
+    private final By confirmButton = By.xpath("//div/button[text()=\"Да\"]");
+    private final By confirmedOrderText = By.xpath("//div[text()='Заказ оформлен']");
     private final WebDriver driver;
-    private static final By LAST_NAME_INPUT = By.cssSelector("div > input[placeholder=\"* Имя\"]");
-    private static final By FIRST_NAME_INPUT = By.cssSelector("div > input[placeholder=\"* Фамилия\"]");
-    private static final By METRO_STATION_DROPDOWN = By.cssSelector("div > input[placeholder=\"* Станция метро\"]");
-    private static final By ADDRESS_INPUT = By.cssSelector("div > input[placeholder=\"* Адрес: куда привезти заказ\"]");
-    private static final By PHONE_INPUT = By.cssSelector("div > input[placeholder=\"* Телефон: на него позвонит курьер\"]");
-    private static final By NEXT_BUTTON = By.xpath("//div/button[@class=\"Button_Button__ra12g Button_Middle__1CSJM\"]");
-
-    private static final By START_OF_RENT_INPUT = By.cssSelector("div > input[placeholder=\"* Когда привезти самокат\"]");
-    private static final By RENT_TERM_DROPDOWN = By.xpath("//div[starts-with(@class,\"Dropdown-root\")]");
-    //private static final By BLACK_COLOR_CHECKBOX = By.id("black");
-    //private static final By GREY_COLOR_CHECKBOX = By.id("grey");
-    private static final By COMMENT_INPUT = By.cssSelector("div > input[placeholder=\"Комментарий для курьера\"]");
-    private static final By SEND_ORDER_BUTTON = By.cssSelector("div > button[class=\"Button_Button__ra12g Button_Middle__1CSJM\"]");
-    private static final By CONFIRM_BUTTON = By.xpath("//div/button[text()=\"Да\"]");
-    private static final By COMFIRMED_ORDER_TEXT = By.xpath("//div[text()='Заказ оформлен']");
 
 
     public OrderPage(WebDriver driver) {
@@ -31,33 +28,38 @@ public class OrderPage {
     }
 
     public void fillNames(String lastName, String firstName) {
-        driver.findElement(LAST_NAME_INPUT).sendKeys(lastName);
-        driver.findElement(FIRST_NAME_INPUT).sendKeys(firstName);
+        driver.findElement(lastNameInput).sendKeys(lastName);
+        driver.findElement(firstNameInput).sendKeys(firstName);
     }
 
     public void fillMetroStation(String metroStation) {
-        driver.findElement(METRO_STATION_DROPDOWN).click();
-        driver.findElement(METRO_STATION_DROPDOWN).sendKeys(metroStation);
-        driver.findElement(METRO_STATION_DROPDOWN).sendKeys(Keys.ARROW_DOWN);
-        driver.findElement(METRO_STATION_DROPDOWN).sendKeys(Keys.ENTER);
+        driver.findElement(metroStationDropdown).click();
+        driver.findElement(metroStationDropdown).sendKeys(metroStation);
+        driver.findElement(metroStationDropdown).sendKeys(Keys.ARROW_DOWN);
+        driver.findElement(metroStationDropdown).sendKeys(Keys.ENTER);
     }
 
     public void fillAddressAndPhone(String address, String phone) {
-        driver.findElement(ADDRESS_INPUT).sendKeys(address);
-        driver.findElement(PHONE_INPUT).sendKeys(phone);
+        driver.findElement(addressInput).sendKeys(address);
+        driver.findElement(phoneInput).sendKeys(phone);
+    }
+    public void fillFirstForm(String lastName, String firstName, String metroStation, String address, String phone){
+        fillNames(lastName, firstName);
+        fillMetroStation(metroStation);
+        fillAddressAndPhone(address, phone);
     }
 
     public void clickNextButton() {
-        driver.findElement(NEXT_BUTTON).click();
+        driver.findElement(nextButton).click();
     }
 
     public void fillStartOfRent(String date) {
-        driver.findElement(START_OF_RENT_INPUT).sendKeys(date);
-        driver.findElement(START_OF_RENT_INPUT).sendKeys(Keys.ENTER);
+        driver.findElement(startOfRentInput).sendKeys(date);
+        driver.findElement(startOfRentInput).sendKeys(Keys.ENTER);
     }
 
     public void fillRentTerm(int numberOfDays) {
-        driver.findElement(RENT_TERM_DROPDOWN).click();
+        driver.findElement(rentTermDropdown).click();
         List<WebElement> elements = driver.findElements(By.xpath("//div[@class='Dropdown-option']"));
         elements.get(numberOfDays - 1).click();
     }
@@ -67,15 +69,24 @@ public class OrderPage {
     }
 
     public void fillComment(String comment) {
-        driver.findElement(COMMENT_INPUT).sendKeys(comment);
+        driver.findElement(commentInput).sendKeys(comment);
     }
+    public void fillSecondForm(String date, int numberOfDays, String color, String comment){
+        fillStartOfRent(date);
+        fillRentTerm(numberOfDays);
+        setColor(color);
+        fillComment(comment);
+    }
+
     public void clickCreateOrderButton() {
-        driver.findElement(SEND_ORDER_BUTTON).click();
+        driver.findElement(sendOrderButton).click();
     }
-    public void clickConfirmButton(){
-        driver.findElement(CONFIRM_BUTTON).click();
+
+    public void clickConfirmButton() {
+        driver.findElement(confirmButton).click();
     }
+
     public boolean isOrderConfirmed() {
-        return driver.findElement(COMFIRMED_ORDER_TEXT).isDisplayed();
+        return driver.findElement(confirmedOrderText).isDisplayed();
     }
 }
